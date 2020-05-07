@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-export default function Home() {
+const Home = () => {
   return (
     <div className="container">
       <Head>
@@ -117,6 +117,7 @@ export default function Home() {
           margin: 0;
           line-height: 1.15;
           font-size: 4rem;
+          border-top: 1px solid color-mod(var(--blue) l(10%));
         }
 
         .title,
@@ -207,3 +208,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home
