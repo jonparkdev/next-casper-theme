@@ -1,6 +1,7 @@
 import Head from 'next/head'
+import { getPosts }  from '../api'
 
-const Home = () => {
+const Home = props => {
   return (
     <div className="container">
       <Head>
@@ -26,7 +27,9 @@ const Home = () => {
 }
 
 Home.getInitialProps = async (context) => {
+  const posts = await getPosts();
 
+  return { posts }
 }
 
 export default Home
