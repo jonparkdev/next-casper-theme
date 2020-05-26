@@ -1,7 +1,9 @@
 import Head from 'next/head'
-import { getPosts }  from '../api'
+import PostCards from '../components/PostCards'
+import { getHomePagePosts }  from '../api'
 
 const Home = props => {
+  const { posts } = props
   return (
     <div className="container">
       <Head>
@@ -22,13 +24,23 @@ const Home = props => {
           </div>
         </div>
       </header>
+
+      <main id="site-main" className="site-main outer">
+          <div className="inner posts">
+              <div className="post-feed">
+                {posts.map((post, index)=>{
+                  console.log(post)
+                  return <PostCards key={`home-page-card-${index}`} {...{post, home: true, index}} />
+                })}
+              </div>
+          </div>
+      </main>
     </div>
   )
 }
 
 Home.getInitialProps = async (context) => {
-  const posts = await getPosts();
-
+  const posts = await getHomePagePosts();
   return { posts }
 }
 
