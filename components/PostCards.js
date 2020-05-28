@@ -1,4 +1,11 @@
 import React from 'react'
+import { avatar } from './icons/avatar'
+import { format } from 'date-fns'
+
+const formatDate = (date, formatString) => {
+  const dateValue = new Date(date)
+  return format(dateValue, formatString)
+}
 
 const PostCards = props => {
   const { post, index, home } = props
@@ -8,8 +15,13 @@ const PostCards = props => {
     url,
     title,
     primary_tag,
-    excerpt
+    excerpt,
+    authors,
+    reading_time,
+    created_at
   } = post
+
+  const metadate = formatDate(created_at, 'meta')
 
   return (
     <>
@@ -29,58 +41,72 @@ const PostCards = props => {
                 />
             </a>
           )}
-          <div class="post-card-content">
-            <a class="post-card-content-link" href={url}>
-              <header class="post-card-header">
+          <div className="post-card-content">
+            <a className="post-card-content-link" href={url}>
+              <header className="post-card-header">
                 {primary_tag && (
-                  <div class="post-card-primary-tag">{primary_tag.name}</div>
+                  <div className="post-card-primary-tag">{primary_tag.name}</div>
                 )}
-                <h2 class="post-card-title">{title}</h2>
+                <h2 className="post-card-title">{title}</h2>
               </header>
 
-              <section class="post-card-excerpt">
+              <section className="post-card-excerpt">
                 {feature_image ? (
-                  <p>{excerpt.substring(30)}</p>
+                  <p>{excerpt.split(" ").slice(0, 30).join(' ')}</p>
                 ) : (
-                  <p>{excerpt.substring(40)}</p>
+                  <p>{excerpt.split(" ").slice(0, 30).join(' ')}</p>
                 )}
               </section>
             </a>
-          </div>
-        </article>
-
-
-{/*
-            <footer class="post-card-meta">
-                <ul class="author-list">
-                    {{#foreach authors}}
-                    <li class="author-list-item">
-
-                        <div class="author-name-tooltip">
-                            {{name}}
-                        </div>
-
-                        {{#if profile_image}}
-                        <a href="{{url}}" class="static-avatar">
-                            <img class="author-profile-image" src="{{img_url profile_image size="xs"}}" alt="{{name}}" />
-                        </a>
-                        {{else}}
-                        <a href="{{url}}" class="static-avatar author-profile-image">{{> "icons/avatar"}}</a>
-                        {{/if}}
-                    </li>
-                    {{/foreach}}
+            <footer className="post-card-meta">
+                <ul className="author-list">
+                    {authors.map((author, index) => {
+                      return (
+                        <li key={`author-${index}`} className="author-list-item">
+                          <div className="author-name-tooltip">
+                              {author.name}
+                          </div>
+                          {author.profile_image ? (
+                            <a href={author.url} className="static-avatar">
+                              <img className="author-profile-image" src={author.profile_image} alt={author.name} />
+                            </a>
+                          ):(
+                            <a href={author.url} className="static-avatar author-profile-image">
+                              {avatar}
+                            </a>
+                          )}
+                        </li>
+                      )
+                    }
+                  )}
                 </ul>
-                <div class="post-card-byline-content">
-                    <span>{{#has author="count:>2"}}Multiple authors{{else}}{{authors}}{{/has}}</span>
-                    <span class="post-card-byline-date"><time datetime="{{date format="YYYY-MM-DD"}}">{{date format="D MMM YYYY"}}</time> <span class="bull">&bull;</span> {{reading_time}}</span>
+                <div className="post-card-byline-content">
+                  <span>
+                    {authors.length === 1 ?
+                      <a href={`/author/${authors[0].slug}/`}> {authors[0].name} </a> :
+                        authors.length === 2 ? (
+                          <>
+                            <a href={`/author/${authors[0].slug}/`}> {authors[0].name} </a>
+                            {', '}
+                            <a href={`/author/${authors[1].slug}/`}> {authors[1].name} </a>
+                          </>
+                        ) : (
+                          'Multiple Authors'
+                        )
+                    }
+                  </span>
+                  <span className="post-card-byline-date">
+                    <time dateTime={formatDate(created_at, "yyyy-MM-dd")}>
+                      {formatDate(created_at, "d MMM yyyy")}
+                    </time>
+                    <span className="bull">&bull;</span>
+                    {reading_time} {' '}MIN READ
+                  </span>
                 </div>
             </footer>
-
-        </div>{{!--/.post-card-content--}}
-
-    </article>
-*/}
-</>
+        </div>
+      </article>
+    </>
   )
 }
 
