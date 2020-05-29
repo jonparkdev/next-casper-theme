@@ -1,35 +1,40 @@
 import Head from 'next/head'
 import PostCards from '../components/PostCards'
-import { getHomePagePosts }  from '../api'
+import HeaderBackground from '../components/HeaderBackground'
+import { getHomePagePosts, getSiteSettings }  from '../api'
 
 const Home = props => {
-  const { posts } = props
+  const { posts, site } = props
+  console.log(site)
   return (
     <div className="container">
       <Head>
         <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.icon" />
       </Head>
 
       <header className="site-home-header">
-        {/* Header image */}
-        <div className="inner">
-          {/* navigation */}
-          <div className="site-header-content">
-            <h1 className="site-title">
-            {/*<img className="site-logo" src="{{img_url @site.logo size="l"}}" alt="{{@site.title}}" /> */}
-            this is stuff
-            </h1>
-            <h2 className="site-description">This is a site discription</h2>
+        <HeaderBackground background={site.cover_image} >
+          <div className="inner">
+            {/* navigation */}
+            <div className="site-header-content">
+              <h1 className="site-title">
+                {site.logo ? (
+                  <img className="site-logo" src={site.logo} alt={site.title} />
+                ) : (
+                  site.title
+                )}
+              </h1>
+              <h2 className="site-description">{site.description}</h2>
+            </div>
           </div>
-        </div>
+        </HeaderBackground>
       </header>
 
       <main id="site-main" className="site-main outer">
           <div className="inner posts">
               <div className="post-feed">
                 {posts.map((post, index)=>{
-                  console.log(post)
                   return <PostCards key={`home-page-card-${index}`} {...{post, home: true, index}} />
                 })}
               </div>
@@ -41,7 +46,8 @@ const Home = props => {
 
 Home.getInitialProps = async (context) => {
   const posts = await getHomePagePosts();
-  return { posts }
+  const site = await getSiteSettings();
+  return { posts, site }
 }
 
 export default Home

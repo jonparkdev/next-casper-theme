@@ -2,6 +2,8 @@
   "plugins": [
     "postcss-flexbugs-fixes",
     "postcss-color-mod-function",
+    "postcss-custom-properties",
+    "postcss-easy-import",
     [
       "postcss-preset-env",
       {
@@ -10,7 +12,7 @@
         },
         "stage": 3,
         "features": {
-          "custom-properties": false
+          "custom-properties": true
         }
       }
     ]

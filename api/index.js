@@ -7,6 +7,7 @@ const api = new GhostContentAPI({
   version: "v3"
 });
 
+// Retrieve posts for homepage context
 export const getHomePagePosts = async () => {
   return await api.posts
     .browse({
@@ -15,4 +16,13 @@ export const getHomePagePosts = async () => {
     .catch(err => {
       console.error(err);
     });
+}
+
+// Retrieve site settings, equivalent to @site in handlebar
+export const getSiteSettings = async () => {
+  return await api.settings
+    .browse()
+    .catch(err => {
+      console.error(err);
+    })
 }

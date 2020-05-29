@@ -29,7 +29,6 @@ production stylesheet in assets/built/screen.css
 
 /* 1. Global - Set up the things
 /* ---------------------------------------------------------- */
-@import "global.css";
 
 /* defined in global.css but need to import again to with postcss */
 :root {
