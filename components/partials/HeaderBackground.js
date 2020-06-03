@@ -1,20 +1,19 @@
 import React from 'react'
 
 const HeaderBackground = ({ background, children }) => {
-
   return(
     <>
       <div
         className=
-          {`outer site-header-background ${background ? "responsive-header-img" : "no-image"}`}
+          {`outer site-header-background ${background ? `responsive-header-img` : `no-image`}`}
       >
         {children}
       </div>
       <style jsx>
         {`
-          .responsive-header-img {
-              background-image: url(${background});
-          }
+          // .responsive-header-img {
+          //     background-image: url(${background});
+          // }
           //
           // @media(max-width: 1000px) {
           //     .responsive-header-img {

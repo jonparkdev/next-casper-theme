@@ -1,11 +1,17 @@
 {
-  "name": "my-app",
+  "name": "next-casper-theme",
+  "description": "A port of the default Casper theme on the Ghost publishing platform",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 5000",
+    "dev": "next dev --port 4000",
     "build": "next build",
     "start": "next start"
+  },
+  "author": {
+      "name": "Ghost Foundation",
+      "email": "hello@ghost.org",
+      "url": "https://ghost.org"
   },
   "dependencies": {
     "@tryghost/content-api": "^1.4.1",

@@ -12,7 +12,7 @@ class MyDocument extends Document {
         <Head >
 
           {/* Document Settings */}
-          <meta charset="utf-8" />
+          <meta charSet="utf-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
           {/* Base Meta */}

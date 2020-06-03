@@ -202,6 +202,7 @@ body {
 /* ---------------------------------------------------------- */
 
 .site-home-header {
+    position: relative;
     z-index: 1000;
 }
 
@@ -296,7 +297,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    overflow-y: hidden;
+    overflow: hidden;
     height: 64px;
     font-size: 1.3rem;
 }
