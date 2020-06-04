@@ -1,2 +1,1 @@
-# fionakhor.com
-Ghost Blog Custom Template
+# Nextjs Port of Ghost.orgs Default Theme Casper
