@@ -2,15 +2,22 @@ import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
 import SiteHeader from '../../components/partials/SiteHeader'
+import PostCards from '../../components/partials/PostCards'
 import { avatar } from '../../components/icons'
 import { getPostSlugs, getPostBySlug, getSiteSettings, getPostsByFilter } from '../../api'
 import { formatDate } from '../../components/utils'
 
-const Post = ({ site, post, relatedPosts, relatedPostsMeta, morePosts, preview }) => {
+const Post = ({
+  site,
+  post,
+  relatedPosts,
+  relatedPostsMeta,
+  morePosts,
+  preview,
+  next,
+  prev
+}) => {
   const router = useRouter()
-  if (!router.isFallback && !post?.slug) {
-    return <ErrorPage statusCode={404} />
-  }
 
   /**
     * Start Code Block - All code from this point to `End Code Block` indicator
@@ -29,13 +36,15 @@ const Post = ({ site, post, relatedPosts, relatedPostsMeta, morePosts, preview }
 
   // set above variables on page mount and add/remove event listeners
   React.useEffect(() => {
-    lastScrollY.current = window.scrollY
+    if(!router.isFallback && post?.slug){
+      lastScrollY.current = window.scrollY
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    update()
+      window.addEventListener('scroll', onScroll, { passive: true });
+      update()
 
-    return () => {
-      window.removeEventListener('scroll', onScroll, { passive: true });
+      return () => {
+        window.removeEventListener('scroll', onScroll, { passive: true });
+      }
     }
   }, [])
 
@@ -76,6 +85,10 @@ const Post = ({ site, post, relatedPosts, relatedPostsMeta, morePosts, preview }
       ticking = false;
   }
   /* End Code Block */
+
+  if (!router.isFallback && !post?.slug) {
+    return <ErrorPage statusCode={404} />
+  }
 
   return (
     <>
@@ -199,11 +212,7 @@ const Post = ({ site, post, relatedPosts, relatedPostsMeta, morePosts, preview }
 
 
                 <section className="post-full-content">
-                  <div className="post-content">
-                    <div
-                      dangerouslySetInnerHTML={{ __html: post.html }}
-                    />
-                  </div>
+                  <div className="post-content" dangerouslySetInnerHTML={{ __html: post.html }}/>
                 </section>
                 {/*
                 {{!-- Email subscribe form at the bottom of the page --}}
@@ -262,8 +271,13 @@ const Post = ({ site, post, relatedPosts, relatedPostsMeta, morePosts, preview }
                                 →</a>
                             </footer>
                         </article>
-                    )}
-
+                      )}
+                      {prev.length !== 0 && (
+                        <PostCards {...{post: prev[0]}} />
+                      )}
+                      {next.length !== 0 && (
+                        <PostCards {...{post: next[0]}} />
+                      )}
                       </div>
                   </div>
             </aside>
@@ -275,13 +289,16 @@ const Post = ({ site, post, relatedPosts, relatedPostsMeta, morePosts, preview }
 
 export async function getStaticProps({ params }) {
   const post = await getPostBySlug(params.slug)
-  const relatedPosts = await getPostsByFilter(`tags:${post.primary_tag.slug}+id:-${post.id}`, 6)
-  const rPosts = await getPostsByFilter(`tags:${post.primary_tag.slug}`,5)
+  const relatedPosts = await getPostsByFilter(`tags:${post.primary_tag.slug}+id:-${post.id}`, 3)
+  const nextPost = await getPostsByFilter(`published_at:>'${post.published_at}'+id:-${post.id}`, '1')
+  const prevPost = await getPostsByFilter(`published_at:<'${post.published_at}'+id:-${post.id}`, '1')
   const site = await getSiteSettings()
-  console.log(rPosts.meta)
+
   return {
     props: {
       relatedPostsMeta: relatedPosts.meta,
+      prev: prevPost,
+      next: nextPost,
       relatedPosts,
       site,
       post: {
