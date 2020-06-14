@@ -14,8 +14,13 @@ const SiteHeader = ({site, post, setRef}) => {
 
 SiteHeader.propTypes = {
   site: PropTypes.object.isRequired,
-  post: PropTypes.object.isRequired,
-  setRef: PropTypes.func.isRequired
+  post: PropTypes.object,
+  setRef: PropTypes.func
+}
+
+SiteHeader.defaultProp = {
+  setRef: null,
+  post: false
 }
 
 export default SiteHeader

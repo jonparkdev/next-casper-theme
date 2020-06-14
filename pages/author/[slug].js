@@ -105,10 +105,10 @@ const Author = ({ site, author, posts, paginationInfo }) => {
 }
 
 Author.propTypes = {
-  posts: PropTypes.object.isRequired,
+  posts: PropTypes.array.isRequired,
   site: PropTypes.object.isRequired,
   author: PropTypes.object.isRequired,
-  paginationInfo: PropTypes.objects.isRequired
+  paginationInfo: PropTypes.object.isRequired
 }
 
 Author.getInitialProps = async context => {

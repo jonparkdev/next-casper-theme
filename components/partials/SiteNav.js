@@ -55,7 +55,9 @@ const SiteNav = ({ site, post, setRef }) => {
                         className={`nav-${lowerCaseLabel}${router.asPath === nav.url ? " nav-current" : ""}`}
                         role="menuitem"
                       >
-                        <a href={nav.url}>{nav.label}</a>
+                        <Link href='/'>
+                          <a>{nav.label}</a>
+                        </Link>
                       </li>
                     )
                   })}
@@ -103,8 +105,13 @@ const SiteNav = ({ site, post, setRef }) => {
 
 SiteNav.propTypes = {
   site: PropTypes.object.isRequired,
-  post: PropTypes.object.isRequired,
-  setRef: PropTypes.func.isRequired
+  post: PropTypes.object,
+  setRef: PropTypes.func
+}
+
+SiteNav.defaultProp = {
+  setRef: null,
+  post: false
 }
 
 export default SiteNav

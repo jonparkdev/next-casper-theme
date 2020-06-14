@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { getSiteSettings } from '../../api'
 import fitvids from 'fitvids'
 /*
@@ -35,7 +36,7 @@ const Layout = (props) => {
       let response = await getSiteSettings()
       setSite(response)
     }
-    
+
     getSiteData()
     setLoading(false)
 
@@ -48,21 +49,28 @@ const Layout = (props) => {
   return (
     <>
       <div className="site-wrapper">
-        {children}
+          {children}
 
-        {!loading && (
-          <footer className="site-footer outer">
-              <div className="site-footer-content inner">
-                  <section className="copyright"><a href={site.url}>{site.title}</a> &copy; {new Date().getFullYear()}</section>
-                  <nav className="site-footer-nav">
-                      <a style={{cursor: "pointer"}} href={site.url}>Latest Posts</a>
-                      {site.facebook && <a href={ site.facebook } target="_blank" rel="noopener">Facebook</a>}
-                      {site.twitter && <a href={site.twitter} target="_blank" rel="noopener">Twitter</a>}
-                      <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
-                  </nav>
-              </div>
-          </footer>
-        )}
+          {!loading && (
+            <footer className="site-footer outer">
+                <div className="site-footer-content inner">
+                    <section className="copyright">
+                      <Link href={'/'}>
+                          <a>{site.title}</a>
+                      </Link>{' '}
+                      &copy; {new Date().getFullYear()}
+                    </section>
+                    <nav className="site-footer-nav">
+                        <Link href={'/'}>
+                            <a style={{cursor: "pointer"}} href={site.url}>Latest Posts</a>
+                        </Link>{' '}
+                        {site.facebook && <a href={ site.facebook } target="_blank" rel="noopener">Facebook</a>}
+                        {site.twitter && <a href={site.twitter} target="_blank" rel="noopener">Twitter</a>}
+                        <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+                    </nav>
+                </div>
+            </footer>
+          )}
       </div>
     </>
   )

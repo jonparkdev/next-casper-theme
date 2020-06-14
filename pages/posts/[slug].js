@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import ErrorPage from 'next/error'
@@ -21,16 +22,35 @@ const Post = ({
 }) => {
   const router = useRouter()
 
+  const {
+    feature_image,
+  } = post
+
+  // adding string to make featuer image responseive
+  let srcset
+  if(feature_image) {
+    // Flag to check if image is ghost default image
+    if(!feature_image.includes("static.ghost.org")){
+      const sizes = [300, 600, 1000, 2000];
+      srcset = sizes.map(size => `${feature_image.replace('images', `images/size/w${size}`)} ${size}w`).join(', ');
+    }
+  }
+
   /**
     * Start Code Block - All code from this point to `End Code Block` indicator
     * is for scroll animations as prescribed in the assets/sticky-nav-title.js
     * Used on invividual post pages, displays the post title in place of the nav
     * bar when scrolling past the title
+    * Code also includes hover animation for avatar in post header
   */
 
   // get scrolling elements
   let nav = React.useRef()
   let title = React.useRef()
+
+  // get Avatar element
+  let avatarRef = React.useRef([])
+  let timeout = React.useRef()
 
   // variables to track scrolling of page
   let lastScrollY = React.useRef()
@@ -38,7 +58,7 @@ const Post = ({
 
   // set above variables on page mount and add/remove event listeners
   React.useEffect(() => {
-    if(!router.isFallback && post?.slug){
+    if(!router.isFallback && post.slug){
       lastScrollY.current = window.scrollY
 
       window.addEventListener('scroll', onScroll, { passive: true });
@@ -58,6 +78,28 @@ const Post = ({
   // Get access to post-Title node by setting ref
   const setTitleRef = (el) => {
     title.current = el
+  }
+
+  // Get avatar ref for hover event
+  const setAvatarRef = (el, index) => {
+    avatarRef.current[index] = el
+  }
+
+  // set hovered class to Avatar node
+  const onAvatarHover = (index) => {
+    clearTimeout(timeout.current);
+
+    Object.keys(avatarRef.current).forEach(el => {
+      avatarRef.current[el].children[0].classList.remove('hovered');
+    })
+    avatarRef.current[index].children[0].classList.add('hovered');
+  }
+
+  // remove hovered class from Avatar node
+  const onAvatarLeave = (index) => {
+    timeout.current = setTimeout(function () {
+          avatarRef.current[index].children[0].classList.remove('hovered');
+        }, 800);
   }
 
   // onScroll callback
@@ -88,7 +130,7 @@ const Post = ({
   }
   /* End Code Block */
 
-  if (!router.isFallback && isEmpty(page)) {
+  if (!router.isFallback && isEmpty(post)) {
     return <ErrorPage statusCode={404} />
   }
 
@@ -115,7 +157,9 @@ const Post = ({
                   <header className="post-full-header">
                     {post.primary_tag && (
                       <section className="post-full-tags">
-                        <a href={post.primary_tag.url}>{post.primary_tag.name}</a>
+                        <Link href={`/tag/${post.primary_tag.slug}`}>
+                          <a >{post.primary_tag.name}</a>
+                        </Link>
                       </section>
                     )}
 
@@ -132,8 +176,13 @@ const Post = ({
                         <ul className="author-list">
                           {post.authors.map((author, index) => {
                             return (
-                              <li key={`${index}-${author.name}`} className="author-list-item">
-
+                              <li
+                                onMouseEnter={() => onAvatarHover(index)}
+                                onMouseLeave={() => onAvatarLeave(index)}
+                                ref={(el) => setAvatarRef(el, index)}
+                                key={`${index}-${author.name}`}
+                                className="author-list-item"
+                              >
                                 <div className="author-card">
                                   {author.profile_image ? (
                                     <img className="author-profile-image" src={author.profile_image} alt={author.name} />
@@ -146,25 +195,39 @@ const Post = ({
                                       <div className="bio">
                                         <h2>{author.name}</h2>
                                         <p>{author.bio}</p>
-                                        <p><a href={author.url}>More posts</a> by {author.name}.</p>
+                                        <p>
+                                          <Link href={`/author/${author.slug}`}>
+                                            <a>More posts</a>
+                                          </Link>{' '}
+                                          by {author.name}.
+                                        </p>
                                       </div>
                                     ) : (
                                       <>
                                         <h2>{author.name}</h2>
-                                        <p>Read <a href={author.url}>more posts</a> by this author.</p>
+                                        <p>
+                                          <Link href={`/author/${author.slug}`}>
+                                            <a>More posts</a>
+                                          </Link>{' '}
+                                          by {author.name}.
+                                        </p>
                                       </>
                                     )}
                                   </div>
                                 </div>
 
                                 {author.profile_image ? (
-                                  <a href={author.url} className="static-avatar">
-                                    <img className="author-profile-image" src={author.profile_image} alt={author.name} />
-                                  </a>
+                                  <Link href={`/author/${author.slug}`}>
+                                    <a className="static-avatar">
+                                      <img className="author-profile-image" src={author.profile_image} alt={author.name} />
+                                    </a>
+                                  </Link>
                                 ):(
-                                  <a href={author.url} className="static-avatar author-profile-image">
-                                    {avatar}
-                                  </a>
+                                  <Link href={`/author/${author.slug}`}>
+                                    <a className="static-avatar author-profile-image">
+                                      {avatar}
+                                    </a>
+                                  </Link>
                                 )}
                               </li>
                             )
@@ -205,10 +268,7 @@ const Post = ({
                   {post.feature_image && (
                     <figure className="post-full-image">
                       <img
-                        srcSet={`${post.feature_image} 300w,
-                                ${post.feature_image} 600w,
-                                ${post.feature_image} 1000w,
-                                ${post.feature_image} 2000w`}
+                        srcSet={srcset}
                         sizes="(max-width: 800px) 400px, (max-width: 1170px) 1170px, 2000px"
                         src={`${post.feature_image}`}
                         alt={post.title}
@@ -244,7 +304,12 @@ const Post = ({
                           <article className="read-next-card">
                               <header className="read-next-card-header">
 
-                                <h3><span>More in</span> <a href={post.primary_tag.url}>{post.primary_tag.name}</a></h3>
+                                <h3>
+                                  <span>More in</span>{' '}
+                                  <Link href={`/tag/${post.primary_tag.slug}`}>
+                                    <a>{post.primary_tag.name}</a>
+                                  </Link>{' '}
+                                </h3>
 
                               </header>
                               <div className="read-next-card-content">
@@ -252,7 +317,11 @@ const Post = ({
                                     {relatedPosts.map((post, index) => {
                                       return (
                                         <li key={`${post.name}-${index}`}>
-                                            <h4><a href={post.url}>{post.title}</a></h4>
+                                            <h4>
+                                              <Link href={`/posts/${post.slug}`}>
+                                                <a>{post.title}</a>
+                                              </Link>
+                                            </h4>
                                             <div className="read-next-card-meta">
                                                 <p>
                                                   <time dateTime={formatDate(post.published_at, "yyyy-MM-dd")}>
@@ -267,7 +336,10 @@ const Post = ({
                                   </ul>
                               </div>
                               <footer className="read-next-card-footer">
-                                  <a href={post.primary_tag.url}>
+                                <Link
+                                  href={!relatedPostsMeta.pagination.total ? '/' : `/tag/${post.primary_tag.slug}`}
+                                >
+                                  <a>
                                     {relatedPostsMeta.pagination.total === 0 ?
                                       "No Posts" :
                                         relatedPostsMeta.pagination.total === 1 ?
@@ -275,6 +347,7 @@ const Post = ({
                                             `See all ${relatedPostsMeta.pagination.total} posts`}
 
                                   →</a>
+                                </Link>
                               </footer>
                           </article>
                         )}
@@ -297,15 +370,15 @@ const Post = ({
 Post.propTypes = {
   post: PropTypes.object.isRequired,
   site: PropTypes.object.isRequired,
-  relatedPosts: PropTypes.object.isRequired,
-  prev: PropTypes.object,
-  next: PropTypes.object,
-  relatedPostsMeta: PropTypes.objects.isRequired
+  relatedPosts: PropTypes.array.isRequired,
+  prev: PropTypes.array,
+  next: PropTypes.array,
+  relatedPostsMeta: PropTypes.object.isRequired
 }
 
 Post.defaultProps = {
-  next: null,
-  prev: null
+  next: [],
+  prev: []
 }
 
 export async function getStaticProps({ params }) {

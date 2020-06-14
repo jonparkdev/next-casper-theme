@@ -79,10 +79,10 @@ const Tag = ({ site, tag, posts, paginationInfo }) => {
 }
 
 Tag.propTypes = {
-  posts: PropTypes.object.isRequired,
+  posts: PropTypes.array.isRequired,
   site: PropTypes.object.isRequired,
   tag: PropTypes.object.isRequired,
-  paginationInfo: PropTypes.objects.isRequired
+  paginationInfo: PropTypes.object.isRequired
 }
 
 Tag.getInitialProps = async context => {

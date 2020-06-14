@@ -159,7 +159,7 @@ Home.propTypes = {
   posts: PropTypes.object.isRequired,
   site: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
-  paginationInfo: PropTypes.objects.isRequired
+  paginationInfo: PropTypes.object.isRequired
 }
 
 Home.getInitialProps = async (context) => {

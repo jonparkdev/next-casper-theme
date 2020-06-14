@@ -1,9 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 const HeaderBackground = ({ background, children }) => {
-  const sizes = [300, 600, 1000, 2000];
-  //const srcset = sizes.map(size => `${background.replace('images', `images/size/w${size}`)} ${size}w`).join(', ');
+  // adding string to make featuer image responseive
+  let srcset
+  if(background) {
+    // Flag to check if image is ghost default image
+    if(!background.includes("static.ghost.org")){
+      const sizes = [300, 600, 1000, 2000];
+      srcset = sizes.map(size => `${background.replace('images', `images/size/w${size}`)}`);
+    }
+  }
   return(
     <>
       <div
@@ -14,29 +22,25 @@ const HeaderBackground = ({ background, children }) => {
       </div>
       <style jsx>
         {`
-          // .responsive-header-img {
-          //     background-image: url(${background});
-          // }
-          //
-          // @media(max-width: 1000px) {
-          //     .responsive-header-img {
-          //         background-image: url({{img_url background size='l'}});
-          //         background-image: -webkit-image-set(url({{img_url background size='l'}}) 1x,
-          //             url({{img_url background size='xl'}}) 2x);
-          //         background-image: image-set(url({{img_url background size='l'}}) 1x,
-          //             url({{img_url background size='xl'}}) 2x);
-          //     }
-          // }
-          //
-          // @media(max-width: 600px) {
-          //     .responsive-header-img {
-          //         background-image: url({{img_url background size='m'}});
-          //         background-image: -webkit-image-set(url({{img_url background size='m'}}) 1x,
-          //             url({{img_url background size='l'}}) 2x);
-          //         background-image: image-set(url({{img_url background size='m'}}) 1x,
-          //             url({{img_url background size='l'}}) 2x);
-          //     }
-          // }
+          .responsive-header-img {
+              background-image: url(${background});
+          }
+
+          @media(max-width: 1000px) {
+              .responsive-header-img {
+                  background-image: url(${!isEmpty(srcset) ? srcset[2] : background});
+                  background-image: image-set(url(${!isEmpty(srcset) ? srcset[2] : background}) 1x,
+                      url(${!isEmpty(srcset) ? srcset[3] : background}) 2x);
+              }
+          }
+
+          @media(max-width: 600px) {
+              .responsive-header-img {
+                  background-image: url(${!isEmpty(srcset) ? srcset[1] : background});
+                  background-image: image-set(${!isEmpty(srcset) ? srcset[1] : background}) 1x,
+                      url(${!isEmpty(srcset) ? srcset[2] : background}) 2x);
+              }
+          }
         `}
       </style>
     </>
@@ -44,7 +48,11 @@ const HeaderBackground = ({ background, children }) => {
 }
 
 HeaderBackground.propTypes = {
-    background: PropTypes.string.isRequired
+    background: PropTypes.string
+}
+
+HeaderBackground.defaultProps = {
+    background: null
 }
 
 export default HeaderBackground
