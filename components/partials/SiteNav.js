@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { facebook, twitter } from '../../components/icons'
 
@@ -11,9 +12,13 @@ const SiteNav = ({ site, post, setRef }) => {
           <div className="site-nav-left-wrapper">
               <div className="site-nav-left">
                   {site.logo ? (
-                      <a className="site-nav-logo" href={site.url}><img src={site.logo} alt={site.title} /></a>
+                      <Link href='/'>
+                        <a className="site-nav-logo"><img src={site.logo} alt={site.title} /></a>
+                      </Link>
                   ) : (
-                      <a className="site-nav-logo" href={site.url}>{site.title}</a>
+                      <Link href='/'>
+                        <a className="site-nav-logo" href={site.url}>{site.title}</a>
+                      </Link>
                   )}
                   <div className="site-nav-content">
                       {site.navigation.length !== 0 && (

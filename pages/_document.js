@@ -7,6 +7,7 @@ class MyDocument extends Document {
   }
 
   render() {
+
     return (
       <Html>
         <Head >
@@ -23,6 +24,12 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+
+          {/**
+             * Ghost outputs important scripts and data with this tag - it should
+             * always be the very last thing before the closing body tag
+            **/}
+
         </body>
       </Html>
     )

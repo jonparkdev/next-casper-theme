@@ -9,18 +9,22 @@
     "start": "next start"
   },
   "author": {
-      "name": "Ghost Foundation",
-      "email": "hello@ghost.org",
-      "url": "https://ghost.org"
+    "name": "Ghost Foundation",
+    "email": "hello@ghost.org",
+    "url": "https://ghost.org"
   },
   "dependencies": {
     "@tryghost/content-api": "^1.4.1",
     "date-fns": "^2.14.0",
+    "fitvids": "^2.1.1",
+    "lodash": "^4.17.15",
     "next": "^9.4.2",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "react-infinite-scroller": "^1.2.4"
   },
   "devDependencies": {
+    "dotenv-webpack": "^1.8.0",
     "postcss-color-mod-function": "^3.0.3",
     "postcss-custom-properties": "^9.1.1",
     "postcss-easy-import": "^3.0.0",

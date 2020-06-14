@@ -3,32 +3,26 @@ import GhostContentAPI from "@tryghost/content-api"
 // Create API instance with site credentials
 const api = new GhostContentAPI({
   url: 'http://localhost:2368',
-  key: '2b33f7d26bb801b0d98fcb4fe5',
+  key: `2b33f7d26bb801b0d98fcb4fe5`,
   version: "v3"
 });
 
-/*
-  Some of the below getter functions, there is a a fields array parameter.
-  This fields parameter is used to request specific information from the api,
-  as most of the time we do not need every piece of info in the response
-*/
-
-
 // Retrieve all post, defaults set in parameters
-export const getAllPosts = async (limit=7, include=['tags,authors']) => {
+export const getPosts = async (page=1, limit=7, include=['tags,authors']) => {
+
   return await api.posts
     .browse({
-      limit, include
+      page, limit, include
     })
     .catch(err => {
       console.error(err);
     });
 }
 
-export const getPostsByFilter = async (filter, limit='all', include=['tags,authors']) => {
+export const getPostsByFilter = async (filter, page=1, limit=7, include=['tags,authors']) => {
   return await api.posts
     .browse({
-      limit, include, filter
+      page, limit, include, filter
     })
     .catch(err => {
       console.error(err);
@@ -59,21 +53,40 @@ export const getPostSlugs = async () => {
   })
 }
 
-// Get post by slug
-const defaultPostFields = [
-  "feature_image",
-  "title",
-  "custom_excerpt",
-  "published_at",
-  "reading_time",
-  "html"
-]
+// Retrieve slugs of all pages
+export const getPageSlugs = async () => {
+  const pages = await api.pages
+    .browse({
+      fields: ['slug']
+    }).
+    catch(err => {
+      console.error(err);
+    })
+
+  return pages.map(page => {
+    return page.slug
+  })
+}
+
+// Retrieve Post by slug
 export const getPostBySlug = async (slug, include=['tags,authors']) => {
   const post = await api.posts
     .read({slug}, {include})
     .catch(err => {
       console.error(err);
     })
+
+  return post
+}
+
+// Retrieve Page by slug
+export const getPageBySlug = async (slug, include=['tags,authors']) => {
+  const post = await api.pages
+    .read({slug}, {include})
+    .catch(err => {
+    
+    })
+
   return post
 }
 
@@ -90,6 +103,23 @@ const defaultAuthorFields = [
 ]
 export const getAuthorBySlug = async (slug, fields=[...defaultAuthorFields], include=['count.posts',"posts"]) => {
   const author = await api.authors
+    .read({slug}, {fields, include})
+    .catch(err => {
+      console.error(err);
+    })
+  return author
+}
+
+// Get tag by slug
+const defaultTagFields = [
+  "name",
+  "feature_image",
+  "description",
+  "meta_title",
+  "meta_description"
+]
+export const getTagBySlug = async (slug, fields=[...defaultTagFields], include=['count.posts',"posts"]) => {
+  const author = await api.tags
     .read({slug}, {fields, include})
     .catch(err => {
       console.error(err);

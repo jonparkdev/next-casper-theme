@@ -1,6 +1,8 @@
 import React from 'react'
 
 const HeaderBackground = ({ background, children }) => {
+  const sizes = [300, 600, 1000, 2000];
+  //const srcset = sizes.map(size => `${background.replace('images', `images/size/w${size}`)} ${size}w`).join(', ');
   return(
     <>
       <div

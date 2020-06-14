@@ -1,12 +1,33 @@
 import Head from 'next/head'
+import InfiniteScroll from 'react-infinite-scroller'
 import SiteHeader from '../components/partials/SiteHeader'
 import SiteNav from '../components/partials/SiteNav'
 import PostCards from '../components/partials/PostCards'
 import HeaderBackground from '../components/partials/HeaderBackground'
-import { getAllPosts, getSiteSettings }  from '../api'
+import OpenGraph from '../components/OpenGraph'
+import { getPosts, getSiteSettings }  from '../api'
+import {withRouter} from 'next/router'
 
 const Home = props => {
-  const { posts, site } = props
+  const { posts, site, paginationInfo, router } = props
+
+  /* setState to track pagination and InfiniteScroll component */
+  const [pagination, setPagination] = React.useState({
+    postsState: posts,
+    page: paginationInfo.page,
+    pageLimit: paginationInfo.pages
+  })
+
+  const getMorePosts = async () => {
+    const {postsState, page, pageLimit } = pagination
+    const morePosts = await getPosts(page + 1, 7)
+
+    setPagination({
+      ...pagination,
+      postsState: [...postsState, ...morePosts],
+      page: page + 1,
+    })
+  }
 
   /*
     Start Code Block - All code from this point to `End Code Block` indicator
@@ -82,15 +103,15 @@ const Home = props => {
       ticking = false;
   }
   /* End Code Block */
-
   return (
     <div className='home-template'>
       <div className="container">
-        <Head>
-          <title>Create Next App</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-
+        <OpenGraph
+          router={router}
+          description={site.meta_description}
+          image={site.og_image}
+          title={site.meta_title}
+        />
         <header className="site-home-header">
           <HeaderBackground background={site.cover_image} >
             <div className="inner">
@@ -111,11 +132,19 @@ const Home = props => {
 
         <main id="site-main" className="site-main outer">
             <div className="inner posts">
+              <InfiniteScroll
+                pageStart={0}
+                loadMore={getMorePosts}
+                threshold = {300}
+                hasMore={pagination.pageLimit !== pagination.page}
+                loader={<div className="loader" key={0}>Loading ...</div>}
+              >
                 <div ref={setFeedRef} className="post-feed">
-                  {posts.map((post, index)=>{
+                  {pagination.postsState.map((post, index)=>{
                     return <PostCards key={`home-page-card-${index}`} {...{post, home: true, index}} />
                   })}
                 </div>
+              </InfiniteScroll>
             </div>
         </main>
 
@@ -126,10 +155,11 @@ const Home = props => {
 }
 
 Home.getInitialProps = async (context) => {
-  const posts = await getAllPosts();
+  const posts = await getPosts(1, 7);
   const site = await getSiteSettings();
+  const { meta: { pagination } } = posts;
 
-  return { posts, site }
+  return { posts, site, paginationInfo: pagination }
 }
 
-export default Home
+export default withRouter(Home)

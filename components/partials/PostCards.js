@@ -11,6 +11,17 @@ const PostCards = props => {
     feature_image,
   } = post
 
+  // adding string to make featuer image responseive
+  let srcset
+  if(feature_image) {
+    // Flag to check if image is ghost default image
+    if(!feature_image.includes("static.ghost.org")){
+      const sizes = [300, 600, 1000, 2000];
+      srcset = sizes.map(size => `${feature_image.replace('images', `images/size/w${size}`)} ${size}w`).join(', ');
+    }
+  }
+
+
   return (
     <>
       <article
@@ -20,10 +31,7 @@ const PostCards = props => {
             <Link href="/posts/[slug]" as={`/posts/${post.slug}`} >
               <a className="post-card-image-link">
                   <img className="post-card-image"
-                      srcSet={`${feature_image} 300w,
-                              ${feature_image} 600w,
-                              ${feature_image} 1000w,
-                              ${feature_image} 2000w`}
+                      srcSet={srcset}
                       sizes="(max-width: 1000px) 400px, 700px"
                       src= {`${feature_image}`}
                       alt={post.title}
@@ -43,9 +51,9 @@ const PostCards = props => {
 
                 <section className="post-card-excerpt">
                   {post.feature_image ? (
-                    <p>{post.excerpt.split(" ").slice(0, 30).join(' ')}</p>
+                    <p>{post.excerpt && post.excerpt.split(" ").slice(0, 30).join(' ')}</p>
                   ) : (
-                    <p>{post.excerpt.split(" ").slice(0, 30).join(' ')}</p>
+                    <p>{post.excerpt && post.excerpt.split(" ").slice(0, 30).join(' ')}</p>
                   )}
                 </section>
               </a>
@@ -90,7 +98,7 @@ const PostCards = props => {
                           </Link>
                           {', '}
                           <Link href="/author/[slug]" as={`/author/${post.authors[1].slug}/`} >
-                            <a> {post.authors[1].name} </a> 
+                            <a> {post.authors[1].name} </a>
                           </Link>
                         </>
                       ) : (
