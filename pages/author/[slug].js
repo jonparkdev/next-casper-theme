@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import SiteHeader from '../../components/partials/SiteHeader'
 import InfiniteScroll from 'react-infinite-scroller'
@@ -101,6 +102,13 @@ const Author = ({ site, author, posts, paginationInfo }) => {
       </div>
     </>
   )
+}
+
+Author.propTypes = {
+  posts: PropTypes.object.isRequired,
+  site: PropTypes.object.isRequired,
+  author: PropTypes.object.isRequired,
+  paginationInfo: PropTypes.objects.isRequired
 }
 
 Author.getInitialProps = async context => {

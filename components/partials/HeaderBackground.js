@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const HeaderBackground = ({ background, children }) => {
   const sizes = [300, 600, 1000, 2000];
@@ -40,6 +41,10 @@ const HeaderBackground = ({ background, children }) => {
       </style>
     </>
   )
+}
+
+HeaderBackground.propTypes = {
+    background: PropTypes.string.isRequired
 }
 
 export default HeaderBackground

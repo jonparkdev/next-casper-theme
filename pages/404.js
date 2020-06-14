@@ -1,3 +1,5 @@
+// This Page is not used at the moment for errors
+
 import React from 'react'
 import SiteHeader from '../components/partials/SiteHeader'
 import Link from 'next/link'

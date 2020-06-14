@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import PropTypes from 'prop-types'
 
 import { avatar } from '../icons'
 import { formatDate } from '../utils'
@@ -119,6 +120,17 @@ const PostCards = props => {
       </article>
     </>
   )
+}
+
+PostCards.propTypes = {
+  index: PropTypes.number,
+  post: PropTypes.object.isRequired,
+  home: PropTypes.bool
+}
+
+PostCards.defaultProps = {
+  index: null,
+  home: false
 }
 
 export default PostCards

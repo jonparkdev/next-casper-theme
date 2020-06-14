@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import SiteHeader from '../../components/partials/SiteHeader'
 import InfiniteScroll from 'react-infinite-scroller'
@@ -75,6 +76,13 @@ const Tag = ({ site, tag, posts, paginationInfo }) => {
       </div>
     </>
   )
+}
+
+Tag.propTypes = {
+  posts: PropTypes.object.isRequired,
+  site: PropTypes.object.isRequired,
+  tag: PropTypes.object.isRequired,
+  paginationInfo: PropTypes.objects.isRequired
 }
 
 Tag.getInitialProps = async context => {

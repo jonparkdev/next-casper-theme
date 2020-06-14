@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import PropTypes from 'prop-types'
 import InfiniteScroll from 'react-infinite-scroller'
 import SiteHeader from '../components/partials/SiteHeader'
 import SiteNav from '../components/partials/SiteNav'
@@ -152,6 +153,13 @@ const Home = props => {
       </div>
     </div>
   )
+}
+
+Home.propTypes = {
+  posts: PropTypes.object.isRequired,
+  site: PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired,
+  paginationInfo: PropTypes.objects.isRequired
 }
 
 Home.getInitialProps = async (context) => {

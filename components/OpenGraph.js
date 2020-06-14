@@ -41,7 +41,7 @@ OpenGraph.propTypes = {
   type: PropTypes.string,
   title: PropTypes.string,
   description: PropTypes.string,
-  image: PropTypes.string, // Relative to /static/img/opengraph/
+  image: PropTypes.string,
 };
 
 OpenGraph.defaultProps = {

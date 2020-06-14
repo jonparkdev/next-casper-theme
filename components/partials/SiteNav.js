@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { facebook, twitter } from '../../components/icons'
@@ -98,6 +99,12 @@ const SiteNav = ({ site, post, setRef }) => {
         </nav>
     </>
   )
+}
+
+SiteNav.propTypes = {
+  site: PropTypes.object.isRequired,
+  post: PropTypes.object.isRequired,
+  setRef: PropTypes.func.isRequired
 }
 
 export default SiteNav

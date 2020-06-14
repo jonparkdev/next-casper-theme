@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import { isEmpty } from 'lodash'
 import Error from 'next/error'
@@ -64,6 +65,11 @@ const Page = props => {
       )}
     </>
   )
+}
+
+Page.propType = {
+  page: PropTypes.object.isRequired,
+  site: PropTypes.object.isRequired,
 }
 
 export async function getStaticProps({ params }) {

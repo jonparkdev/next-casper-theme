@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
@@ -15,7 +16,6 @@ const Post = ({
   relatedPosts,
   relatedPostsMeta,
   morePosts,
-  preview,
   next,
   prev
 }) => {
@@ -292,6 +292,20 @@ const Post = ({
       )}
     </>
   )
+}
+
+Post.propTypes = {
+  post: PropTypes.object.isRequired,
+  site: PropTypes.object.isRequired,
+  relatedPosts: PropTypes.object.isRequired,
+  prev: PropTypes.object,
+  next: PropTypes.object,
+  relatedPostsMeta: PropTypes.objects.isRequired
+}
+
+Post.defaultProps = {
+  next: null,
+  prev: null
 }
 
 export async function getStaticProps({ params }) {

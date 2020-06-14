@@ -1,5 +1,6 @@
 import React from 'react'
 import SiteNav from './SiteNav'
+import PropTypes from 'prop-types'
 
 const SiteHeader = ({site, post, setRef}) => {
   return (
@@ -9,6 +10,12 @@ const SiteHeader = ({site, post, setRef}) => {
       </div>
     </div>
   )
+}
+
+SiteHeader.propTypes = {
+  site: PropTypes.object.isRequired,
+  post: PropTypes.object.isRequired,
+  setRef: PropTypes.func.isRequired
 }
 
 export default SiteHeader
