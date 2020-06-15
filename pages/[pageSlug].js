@@ -11,17 +11,19 @@ const Page = props => {
   const { page, site } = props
   const router = useRouter()
 
-  const {
-    feature_image,
-  } = page
+  if(!isEmpty(page)){
+    const {
+      feature_image,
+    } = page
 
-  // adding string to make featuer image responseive
-  let srcset
-  if(feature_image) {
-    // Flag to check if image is ghost default image
-    if(!feature_image.includes("static.ghost.org")){
-      const sizes = [300, 600, 1000, 2000];
-      srcset = sizes.map(size => `${feature_image.replace('images', `images/size/w${size}`)} ${size}w`).join(', ');
+    // adding string to make featuer image responseive
+    let srcset
+    if(feature_image) {
+      // Flag to check if image is ghost default image
+      if(!feature_image.includes("static.ghost.org")){
+        const sizes = [300, 600, 1000, 2000];
+        srcset = sizes.map(size => `${feature_image.replace('images', `images/size/w${size}`)} ${size}w`).join(', ');
+      }
     }
   }
 

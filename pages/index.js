@@ -166,7 +166,7 @@ Home.getInitialProps = async (context) => {
   const posts = await getPosts(1, 7);
   const site = await getSiteSettings();
   const { meta: { pagination } } = posts;
-
+  console.log(posts[0])
   return { posts, site, paginationInfo: pagination }
 }
 

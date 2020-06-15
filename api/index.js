@@ -8,21 +8,21 @@ const api = new GhostContentAPI({
 });
 
 // Retrieve all post, defaults set in parameters
-export const getPosts = async (page=1, limit=7, include=['tags,authors']) => {
+export const getPosts = async (page=1, limit=7, order="published_at desc", include=['tags,authors']) => {
 
   return await api.posts
     .browse({
-      page, limit, include
+      page, limit, include, order
     })
     .catch(err => {
       console.error(err);
     });
 }
 
-export const getPostsByFilter = async (filter, page=1, limit=7, include=['tags,authors']) => {
+export const getPostsByFilter = async (filter, page=1, limit=7, order="published_at desc", include=['tags,authors']) => {
   return await api.posts
     .browse({
-      page, limit, include, filter
+      page, limit, include, filter, order
     })
     .catch(err => {
       console.error(err);
@@ -84,7 +84,7 @@ export const getPageBySlug = async (slug, include=['tags,authors']) => {
   const post = await api.pages
     .read({slug}, {include})
     .catch(err => {
-    
+
     })
 
   return post

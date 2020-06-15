@@ -7,7 +7,7 @@ import Head from 'next/head'
 import SiteHeader from '../../components/partials/SiteHeader'
 import PostCards from '../../components/partials/PostCards'
 import { avatar } from '../../components/icons'
-import { getPostSlugs, getPostBySlug, getSiteSettings, getPostsByFilter } from '../../api'
+import { getPostSlugs, getPostBySlug, getSiteSettings, getPostsByFilter, getPosts} from '../../api'
 import { formatDate } from '../../components/utils'
 import OpenGraph from '../../components/OpenGraph'
 
@@ -370,27 +370,60 @@ const Post = ({
 Post.propTypes = {
   post: PropTypes.object.isRequired,
   site: PropTypes.object.isRequired,
-  relatedPosts: PropTypes.array.isRequired,
+  relatedPosts: PropTypes.array,
   prev: PropTypes.array,
   next: PropTypes.array,
-  relatedPostsMeta: PropTypes.object.isRequired
+  relatedPostsMeta: PropTypes.object
 }
 
 Post.defaultProps = {
   next: [],
-  prev: []
+  prev: [],
+  relatedPosts: null,
+  relatedPostsMeta: {}
 }
 
 export async function getStaticProps({ params }) {
   const post = await getPostBySlug(params.slug)
-  const relatedPosts = await getPostsByFilter(`tags:${post.primary_tag.slug}+id:-${post.id}`, 1, 3)
+  const site = await getSiteSettings()
+  // if a post does not have a tag, it will not have relatedPosts
+  let relatedPosts = null
+  try {
+    relatedPosts = await getPostsByFilter(`tags:${post.primary_tag.slug}+id:-${post.id}`, 1, 3)
+  } catch(err) {
+    console.error(err)
+  }
+
+  /* I was trying to get below code to work, will have to fiddle around a little more
   const nextPost = await getPostsByFilter(`published_at:>'${post.published_at}'+id:-${post.id}`, 1, 1)
   const prevPost = await getPostsByFilter(`published_at:<'${post.published_at}'+id:-${post.id}`, 1, 1)
-  const site = await getSiteSettings()
+  console.log(nextPost)
+  console.log(prevPost)
+  */
+
+  // Not the most elegant solution
+  let allPosts = await getPosts(1, 'all')
+  let index = 0
+  let nextPost = []
+  let prevPost = []
+  while(true) {
+    if(allPosts[index].id === post.id){
+      if(allPosts.length - 1 === index){
+        prevPost.push(allPosts[index-1])
+      } else if(index===0) {
+        nextPost.push(allPosts[index+1])
+      } else {
+        prevPost.push(allPosts[index-1])
+        nextPost.push(allPosts[index+1])
+      }
+      break;
+    }
+    index += 1
+  }
 
   return {
     props: {
-      relatedPostsMeta: relatedPosts.meta,
+      relatedPostsMeta: relatedPosts ? relatedPosts.meta : null,
       prev: prevPost,
       next: nextPost,
       relatedPosts,
