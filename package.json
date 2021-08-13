@@ -18,7 +18,7 @@
     "date-fns": "^2.14.0",
     "fitvids": "^2.1.1",
     "lodash": "^4.17.15",
-    "next": "^9.4.2",
+    "next": "^11.1.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-infinite-scroller": "^1.2.4"
